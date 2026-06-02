@@ -40,6 +40,9 @@ dependencies {
     implementation("org.jetbrains.exposed:exposed-jdbc:0.55.0")
     implementation("org.postgresql:postgresql:42.7.4")
 
+    // For add date
+    implementation("org.jetbrains.exposed:exposed-java-time:0.55.0")
+
     // Pull connections
     implementation("com.zaxxer:HikariCP:6.0.0")
 

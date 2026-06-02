@@ -23,9 +23,20 @@ object DatabaseFactory {
         Database.connect(dataSource)
 
         transaction {
-            SchemaUtils.createMissingTablesAndColumns(UserTable) // CountryTable
+            SchemaUtils.createMissingTablesAndColumns(
+                UserTable,
+                ArtistsTable,
+                GenresTable,
+                AlbumsTable,
+                TracksTable,
+                PlaylistsTable,
+                PlaylistTracksTable,
+                FollowedArtistsTable,
+                LikedTracksTable,
+                ListeningHistoryTable
+            )
         }
 
-        println("PostgreSQL (Neon) подключён успешно")
+        println("PostgreSQL подключён успешно")
     }
 }

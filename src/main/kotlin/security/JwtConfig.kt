@@ -27,7 +27,7 @@ object JwtConfig {
             .sign(ALGORITHM)
     }
 
-    fun verifier(): JWTVerifier? = JWT
+    fun verifier(): JWTVerifier = JWT
         .require(ALGORITHM)
         .withIssuer(ISSUER)
         .withAudience(AUDIENCE)
