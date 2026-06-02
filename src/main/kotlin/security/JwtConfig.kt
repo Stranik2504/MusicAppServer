@@ -1,6 +1,7 @@
 package dev.stranik.security
 
 import com.auth0.jwt.JWT
+import com.auth0.jwt.JWTVerifier
 import java.util.Date
 import com.auth0.jwt.algorithms.Algorithm
 
@@ -26,7 +27,7 @@ object JwtConfig {
             .sign(ALGORITHM)
     }
 
-    fun verifier() = JWT
+    fun verifier(): JWTVerifier? = JWT
         .require(ALGORITHM)
         .withIssuer(ISSUER)
         .withAudience(AUDIENCE)

@@ -4,6 +4,7 @@ import dev.stranik.Routing.configureRouting
 import dev.stranik.data.databases.DatabaseFactory
 import dev.stranik.di.appModule
 import dev.stranik.plugins.configureAuthentication
+import dev.stranik.plugins.configureCORS
 import dev.stranik.plugins.configureCallLogging
 import dev.stranik.plugins.configureContentNegotiation
 import dev.stranik.plugins.configureStatusPages
@@ -69,6 +70,7 @@ fun Application.module() {
     }*/
     appModule()
     configureContentNegotiation()
+    configureCORS()
     configureCallLogging()
     configureStatusPages()
     configureAuthentication()

@@ -8,12 +8,12 @@ class RegisterUseCase(
     private val userRepository: UserRepository,
     private val passwordHasher: PasswordHasher
 ) {
-    suspend fun register(user: User): User? {
+    suspend fun register(user: User): Boolean {
         val saveUser = user.copy(
             passwordHash = passwordHasher.hash(user.passwordHash)
         )
 
         val result = userRepository.addUser(saveUser)
-        return result
+        return result != null
     }
 }

@@ -1,11 +1,10 @@
-package dev.stranik.domain.model
+package dev.stranik.data.dto
 
 import kotlinx.serialization.Serializable
 
 @Serializable
-data class User (
-    val id: Int,
+data class UserDto(
     val username: String,
     val email: String,
-    val passwordHash: String,
+    val password: String
 )
