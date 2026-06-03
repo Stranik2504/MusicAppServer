@@ -13,6 +13,6 @@ class LoginUseCase(
 
         if (!passwordHasher.verify(password, user.passwordHash)) return null
 
-        return JwtConfig.generateToken(user.username, user.email)
+        return JwtConfig.generateToken(user.id, user.username, user.email)
     }
 }

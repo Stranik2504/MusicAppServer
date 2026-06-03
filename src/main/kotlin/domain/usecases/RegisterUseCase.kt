@@ -13,6 +13,10 @@ class RegisterUseCase(
             passwordHash = passwordHasher.hash(user.passwordHash)
         )
 
+        userRepository.findByEmail(saveUser.email)?.let {
+            return false
+        }
+
         val result = userRepository.addUser(saveUser)
         return result != null
     }

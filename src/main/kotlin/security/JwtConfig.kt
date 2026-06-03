@@ -14,13 +14,14 @@ object JwtConfig {
 
     private const val VALIDITY = 7L * 24 * 60 * 60 * 1000 // 7
 
-    fun generateToken(username: String, email: String): String {
+    fun generateToken(userId: Long, username: String, email: String): String {
         val now = System.currentTimeMillis()
         val exp = Date(now + VALIDITY)
 
         return JWT.create()
             .withIssuer(ISSUER)
             .withAudience(AUDIENCE)
+            .withClaim("userId", userId)
             .withClaim("username", username)
             .withClaim("email", email)
             .withExpiresAt(exp)

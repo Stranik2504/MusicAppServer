@@ -1,14 +1,12 @@
-package dev.stranik.domain.model
+package dev.stranik.data.dto
 
 import kotlinx.serialization.Serializable
 import java.time.LocalDateTime
 
 @Serializable
-data class User (
-    val id: Long,
+data class UserInfoDto(
     val username: String,
     val email: String,
-    val passwordHash: String,
     val avatarUrl: String?,
     val createdAt: LocalDateTime,
     val updatedAt: LocalDateTime
