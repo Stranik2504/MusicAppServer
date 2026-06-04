@@ -8,17 +8,16 @@ import dev.stranik.domain.usecases.SearchTracksUseCase
 import dev.stranik.domain.usecases.UnlikeTrackUseCase
 import io.ktor.http.ContentType
 import io.ktor.http.HttpStatusCode
-import io.ktor.server.application.Application
 import io.ktor.server.auth.jwt.JWTPrincipal
 import io.ktor.server.auth.principal
 import io.ktor.server.response.respond
 import io.ktor.server.response.respondText
 import io.ktor.server.response.respondRedirect
 import io.ktor.server.response.respondOutputStream
+import io.ktor.server.routing.Route
 import io.ktor.server.routing.delete
 import io.ktor.server.routing.get
 import io.ktor.server.routing.post
-import io.ktor.server.routing.routing
 import java.io.RandomAccessFile
 import java.nio.charset.StandardCharsets
 import java.net.URI
@@ -38,8 +37,8 @@ class TracksController(
     private val unlikeTrackUseCase: UnlikeTrackUseCase,
     private val getTrackLikesCountUseCase: GetTrackLikesCountUseCase,
 ) {
-    fun configure(application: Application) {
-        application.routing {
+    fun configure(route: Route) {
+        route.apply {
             get("/") {
                 val artistId = call.request.queryParameters["artistId"]?.toLongOrNull()
                 val albumId = call.request.queryParameters["albumId"]?.toLongOrNull()

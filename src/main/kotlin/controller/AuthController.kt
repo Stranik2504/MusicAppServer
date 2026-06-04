@@ -4,17 +4,15 @@ import dev.stranik.data.dto.LoginRequestDto
 import dev.stranik.data.dto.LoginResponseDto
 import dev.stranik.data.dto.UserDto
 import dev.stranik.domain.mapper.toUser
-import dev.stranik.domain.model.User
 import dev.stranik.domain.usecases.LoginUseCase
 import dev.stranik.domain.usecases.RegisterUseCase
 import dev.stranik.security.PasswordHasher
 import io.ktor.http.HttpStatusCode
-import io.ktor.server.application.Application
 import io.ktor.server.request.receive
 import io.ktor.server.response.respond
 import io.ktor.server.response.respondText
+import io.ktor.server.routing.Route
 import io.ktor.server.routing.post
-import io.ktor.server.routing.routing
 
 
 class AuthController(
@@ -22,8 +20,8 @@ class AuthController(
     private val registerUseCase: RegisterUseCase,
     private val passwordHasher: PasswordHasher
 ) {
-    fun configure(application: Application) {
-        application.routing {
+    fun configure(route: Route) {
+        route.apply {
             post("/register") {
                 val user = call.receive<UserDto>()
                 val created = registerUseCase.register(user.toUser(passwordHasher))

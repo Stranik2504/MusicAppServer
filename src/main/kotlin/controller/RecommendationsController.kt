@@ -4,20 +4,19 @@ import dev.stranik.domain.usecases.GetArtistRecommendationsUseCase
 import dev.stranik.domain.usecases.GetHomeRecommendationsUseCase
 import dev.stranik.domain.usecases.GetTrackRecommendationsUseCase
 import io.ktor.http.HttpStatusCode
-import io.ktor.server.application.Application
 import io.ktor.server.auth.jwt.JWTPrincipal
 import io.ktor.server.auth.principal
 import io.ktor.server.response.respond
+import io.ktor.server.routing.Route
 import io.ktor.server.routing.get
-import io.ktor.server.routing.routing
 
 class RecommendationsController(
     private val getHomeRecommendationsUseCase: GetHomeRecommendationsUseCase,
     private val getTrackRecommendationsUseCase: GetTrackRecommendationsUseCase,
     private val getArtistRecommendationsUseCase: GetArtistRecommendationsUseCase,
 ) {
-    fun configure(application: Application) {
-        application.routing {
+    fun configure(route: Route) {
+        route.apply {
             get("/home") {
                 val jwtUserId = call.principal<JWTPrincipal>()?.payload?.getClaim("userId")?.asLong()
 

@@ -7,8 +7,6 @@ import io.ktor.server.response.*
 import io.ktor.server.routing.*
 
 fun Application.configureRouting() {
-    val context = this
-
     routing {
         get("/ping") {
             call.respondText("Pong!")
@@ -16,40 +14,40 @@ fun Application.configureRouting() {
 
         route("/api") {
             route("/auth") {
-                AppContainer.authController.configure(context)
+                AppContainer.authController.configure(this)
             }
 
             authenticate("auth-jwt") {
                 route("/users") {
-                    AppContainer.usersController.configure(context)
+                    AppContainer.usersController.configure(this)
                 }
 
                 route("/artists") {
-                    AppContainer.artistsController.configure(context)
+                    AppContainer.artistsController.configure(this)
                 }
 
                 route("/albums") {
-                    AppContainer.albumsController.configure(context)
+                    AppContainer.albumsController.configure(this)
                 }
 
                 route("/tracks") {
-                    AppContainer.tracksController.configure(context)
+                    AppContainer.tracksController.configure(this)
                 }
 
                 route("/genres") {
-                    AppContainer.genresController.configure(context)
+                    AppContainer.genresController.configure(this)
                 }
 
                 route("/playlists") {
-                    AppContainer.playlistsController.configure(context)
+                    AppContainer.playlistsController.configure(this)
                 }
 
                 route("/recommendations") {
-                    AppContainer.recommendationsController.configure(context)
+                    AppContainer.recommendationsController.configure(this)
                 }
 
                 route("/search") {
-                    AppContainer.searchController.configure(context)
+                    AppContainer.searchController.configure(this)
                 }
             }
         }

@@ -3,17 +3,16 @@ package dev.stranik.controller
 import dev.stranik.domain.usecases.GetAlbumUseCase
 import dev.stranik.domain.usecases.SearchAlbumsUseCase
 import io.ktor.http.HttpStatusCode
-import io.ktor.server.application.Application
 import io.ktor.server.response.respond
+import io.ktor.server.routing.Route
 import io.ktor.server.routing.get
-import io.ktor.server.routing.routing
 
 class AlbumsController(
     private val searchAlbumsUseCase: SearchAlbumsUseCase,
     private val getAlbumUseCase: GetAlbumUseCase,
 ) {
-    fun configure(application: Application) {
-        application.routing {
+    fun configure(route: Route) {
+        route.apply {
             get("/") {
                 val artistId = call.request.queryParameters["artistId"]?.toLongOrNull()
                 val q = call.request.queryParameters["q"]

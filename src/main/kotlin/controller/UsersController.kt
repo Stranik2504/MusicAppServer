@@ -11,16 +11,15 @@ import dev.stranik.domain.usecases.GetListeningHistoryUseCase
 import dev.stranik.domain.usecases.GetUserInfoUseCase
 import dev.stranik.domain.usecases.UpdateUserUseCase
 import io.ktor.http.HttpStatusCode
-import io.ktor.server.application.Application
 import io.ktor.server.auth.jwt.JWTPrincipal
 import io.ktor.server.auth.principal
 import io.ktor.server.request.receive
 import io.ktor.server.response.respond
+import io.ktor.server.routing.Route
 import io.ktor.server.routing.get
 import io.ktor.server.routing.patch
 import io.ktor.server.routing.post
 import io.ktor.server.routing.put
-import io.ktor.server.routing.routing
 
 class UsersController(
     private val userInfoUseCase: GetUserInfoUseCase,
@@ -30,8 +29,8 @@ class UsersController(
     private val getListeningHistoryUseCase: GetListeningHistoryUseCase,
     private val addListeningHistoryUseCase: AddListeningHistoryUseCase,
 ) {
-    fun configure(application: Application) {
-        application.routing {
+    fun configure(route: Route) {
+        route.apply {
             get("/{userId}") {
                 val userId = call.parameters["userId"]!!.toLong()
 

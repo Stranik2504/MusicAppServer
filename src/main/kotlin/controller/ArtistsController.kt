@@ -5,14 +5,13 @@ import dev.stranik.domain.usecases.GetArtistUseCase
 import dev.stranik.domain.usecases.SearchArtistsUseCase
 import dev.stranik.domain.usecases.UnfollowArtistUseCase
 import io.ktor.http.HttpStatusCode
-import io.ktor.server.application.Application
 import io.ktor.server.auth.jwt.JWTPrincipal
 import io.ktor.server.auth.principal
 import io.ktor.server.response.respond
+import io.ktor.server.routing.Route
 import io.ktor.server.routing.delete
 import io.ktor.server.routing.get
 import io.ktor.server.routing.post
-import io.ktor.server.routing.routing
 
 class ArtistsController(
     private val searchArtistsUseCase: SearchArtistsUseCase,
@@ -20,8 +19,8 @@ class ArtistsController(
     private val followArtistUseCase: FollowArtistUseCase,
     private val unfollowArtistUseCase: UnfollowArtistUseCase,
 ) {
-    fun configure(application: Application) {
-        application.routing {
+    fun configure(route: Route) {
+        route.apply {
             post("/{artistId}/follow") {
                 val artistIdParam = call.parameters["artistId"]
                 val artistId = artistIdParam?.toLongOrNull()

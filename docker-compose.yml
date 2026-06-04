@@ -5,10 +5,10 @@ services:
     restart: unless-stopped
     environment:
       POSTGRES_DB: musicapp
-      POSTGRES_USER: root
-      POSTGRES_PASSWORD: very_secure_password_123123**d
+      POSTGRES_USER: musicapp
+      POSTGRES_PASSWORD: 'very_secure_password_123123d'
     ports:
-      - "5432:5432"
+      - "5433:5432"
     volumes:
       - postgres_data:/var/lib/postgresql/data
     healthcheck:
@@ -27,8 +27,8 @@ services:
         condition: service_healthy
     environment:
       DB_JDBC_URL: jdbc:postgresql://db:5432/musicapp
-      DB_USERNAME: root
-      DB_PASSWORD: very_secure_password_123123**d
+      DB_USERNAME: musicapp
+      DB_PASSWORD: 'very_secure_password_123123d'
       DB_DRIVER: org.postgresql.Driver
       MEDIA_ROOT: /storage/music
       # KTOR_DEVELOPMENT: "true"

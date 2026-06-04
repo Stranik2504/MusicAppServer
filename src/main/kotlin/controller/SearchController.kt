@@ -5,10 +5,9 @@ import dev.stranik.domain.usecases.SearchArtistsUseCase
 import dev.stranik.domain.usecases.SearchPlaylistsUseCase
 import dev.stranik.domain.usecases.SearchTracksUseCase
 import io.ktor.http.HttpStatusCode
-import io.ktor.server.application.Application
 import io.ktor.server.response.respond
+import io.ktor.server.routing.Route
 import io.ktor.server.routing.get
-import io.ktor.server.routing.routing
 
 class SearchController(
     private val searchTracksUseCase: SearchTracksUseCase,
@@ -16,8 +15,8 @@ class SearchController(
     private val searchArtistsUseCase: SearchArtistsUseCase,
     private val searchPlaylistsUseCase: SearchPlaylistsUseCase,
 ) {
-    fun configure(application: Application) {
-        application.routing {
+    fun configure(route: Route) {
+        route.apply {
             get("/") {
                 val q = call.request.queryParameters["q"]
                 val type = call.request.queryParameters["type"] ?: "all"
