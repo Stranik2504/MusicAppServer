@@ -3,7 +3,4 @@ ktor:
     port: 8080
   application:
     modules:
-      - dev.stranik.HttpKt.configureHttp
-      - dev.stranik.AuthKt.configureSecurity
-      - dev.stranik.AuthControllerKt.configureAuthRoutes
-      - dev.stranik.RoutingKt.configureRouting
+      - dev.stranik.MainKt.module

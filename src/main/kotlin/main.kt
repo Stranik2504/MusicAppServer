@@ -12,8 +12,8 @@ import io.ktor.server.engine.*
 import io.ktor.server.application.*
 import io.ktor.server.netty.Netty
 
-fun main(args: Array<String>) {
-    embeddedServer(Netty, port = 8080, host = "127.0.0.1") {
+fun main() {
+    embeddedServer(Netty, port = 8080, host = "0.0.0.0") {
         module()
     }.start(wait = true)
 }

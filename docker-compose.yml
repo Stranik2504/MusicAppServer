@@ -1,0 +1,44 @@
+services:
+  db:
+    image: postgres:16-alpine
+    container_name: musicapp-db
+    restart: unless-stopped
+    environment:
+      POSTGRES_DB: musicapp
+      POSTGRES_USER: root
+      POSTGRES_PASSWORD: very_secure_password_123123**d
+    ports:
+      - "5432:5432"
+    volumes:
+      - postgres_data:/var/lib/postgresql/data
+    healthcheck:
+      test: ["CMD-SHELL", "pg_isready -U ${POSTGRES_USER:-musicapp} -d ${POSTGRES_DB:-musicapp}"]
+      interval: 10s
+      timeout: 5s
+      retries: 5
+  app:
+    build:
+      context: .
+      dockerfile: Dockerfile
+    container_name: musicapp-server
+    restart: unless-stopped
+    depends_on:
+      db:
+        condition: service_healthy
+    environment:
+      DB_JDBC_URL: jdbc:postgresql://db:5432/musicapp
+      DB_USERNAME: root
+      DB_PASSWORD: very_secure_password_123123**d
+      DB_DRIVER: org.postgresql.Driver
+      MEDIA_ROOT: /storage/music
+      # KTOR_DEVELOPMENT: "true"
+    ports:
+      - "8080:8080"
+    volumes:
+      - ./storage/music:/storage/music
+      - ./storage/uploads:/storage/uploads
+      - ./storage/tmp:/storage/tmp
+    stdin_open: true
+    tty: true
+volumes:
+  postgres_data:

@@ -8,12 +8,16 @@ import org.jetbrains.exposed.sql.transactions.transaction
 
 object DatabaseFactory {
     fun init() {
-        // TODO: Move config into file config
+        val jdbcUrl = env("DB_JDBC_URL", "jdbc:postgresql://localhost:5432/musicapp")
+        val username = env("DB_USERNAME", "musicapp")
+        val password = env("DB_PASSWORD", "musicapp")
+        val driverClassName = env("DB_DRIVER", "org.postgresql.Driver")
+
         val config = HikariConfig().apply {
-            jdbcUrl = "jdbc:postgresql://ep-sweet-shape-amf5qpex.c-5.us-east-1.aws.neon.tech/neondb?sslmode=require"
-            driverClassName = "org.postgresql.Driver"
-            username = "neondb_owner"
-            password = "npg_QSIye73LDbpV"
+            this.jdbcUrl = jdbcUrl
+            this.driverClassName = driverClassName
+            this.username = username
+            this.password = password
             maximumPoolSize = 10
             isAutoCommit = false
             transactionIsolation = "TRANSACTION_REPEATABLE_READ"
@@ -38,5 +42,10 @@ object DatabaseFactory {
         }
 
         println("PostgreSQL подключён успешно")
+    }
+
+    private fun env(name: String, defaultValue: String): String {
+        val value = System.getenv(name)
+        return if (value.isNullOrBlank()) defaultValue else value
     }
 }

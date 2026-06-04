@@ -1,6 +1,7 @@
 plugins {
     alias(libs.plugins.kotlin.jvm)
     alias(ktorLibs.plugins.ktor)
+    application
 }
 
 group = "dev.stranik"
@@ -19,7 +20,8 @@ dependencies {
     implementation(ktorLibs.server.core)
     implementation(ktorLibs.server.defaultHeaders)
     implementation(ktorLibs.server.netty)
-    implementation(libs.logback.classic)
+    implementation("ch.qos.logback:logback-classic:1.5.25")
+    implementation("ch.qos.logback:logback-core:1.5.25")
 
     implementation("io.ktor:ktor-server-call-logging-jvm")
     implementation("io.ktor:ktor-server-status-pages-jvm")
@@ -38,7 +40,7 @@ dependencies {
     implementation("org.jetbrains.exposed:exposed-core:0.55.0")
     implementation("org.jetbrains.exposed:exposed-dao:0.55.0")
     implementation("org.jetbrains.exposed:exposed-jdbc:0.55.0")
-    implementation("org.postgresql:postgresql:42.7.4")
+    implementation("org.postgresql:postgresql:42.7.11")
 
     // For add date
     implementation("org.jetbrains.exposed:exposed-java-time:0.55.0")
