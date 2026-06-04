@@ -1,8 +1,10 @@
 package dev.stranik.domain.mapper
 
 import dev.stranik.data.databases.UserTable.passwordHash
+import dev.stranik.data.dto.ListeningHistoryDto
 import dev.stranik.data.dto.UserDto
 import dev.stranik.data.dto.UserInfoDto
+import dev.stranik.domain.model.ListeningHistory
 import dev.stranik.domain.model.User
 import dev.stranik.security.PasswordHasher
 import java.time.LocalDateTime
@@ -23,4 +25,18 @@ fun UserInfoDto.toUser(id: Long) = User(
     avatarUrl = avatarUrl,
     createdAt = createdAt,
     updatedAt = updatedAt
+)
+
+fun ListeningHistory.toListeningHistoryDto() = ListeningHistoryDto(
+    trackId = trackId,
+    playedSec = playedSec,
+    playedAt = playedAt
+)
+
+fun ListeningHistoryDto.toListeningHistory(userId: Long) = ListeningHistory(
+    id = -1,
+    userId = userId,
+    trackId = trackId,
+    playedSec = playedSec,
+    playedAt = playedAt
 )

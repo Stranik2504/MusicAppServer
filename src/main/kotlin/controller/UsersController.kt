@@ -1,10 +1,13 @@
 package dev.stranik.controller
 
+import dev.stranik.data.dto.ListeningHistoryDto
 import dev.stranik.data.dto.UserInfoDto
-import dev.stranik.di.AppContainer.followedArtistsRepository
+import dev.stranik.domain.mapper.toListeningHistory
 import dev.stranik.domain.mapper.toUser
+import dev.stranik.domain.usecases.AddListeningHistoryUseCase
 import dev.stranik.domain.usecases.GetAllFollowsUseCase
 import dev.stranik.domain.usecases.GetAvatarUseCase
+import dev.stranik.domain.usecases.GetListeningHistoryUseCase
 import dev.stranik.domain.usecases.GetUserInfoUseCase
 import dev.stranik.domain.usecases.UpdateUserUseCase
 import io.ktor.http.HttpStatusCode
@@ -23,7 +26,9 @@ class UsersController(
     private val userInfoUseCase: GetUserInfoUseCase,
     private val updateUserUseCase: UpdateUserUseCase,
     private val getAvatarUseCase: GetAvatarUseCase,
-    private val getAllFollowsUseCase: GetAllFollowsUseCase
+    private val getAllFollowsUseCase: GetAllFollowsUseCase,
+    private val getListeningHistoryUseCase: GetListeningHistoryUseCase,
+    private val addListeningHistoryUseCase: AddListeningHistoryUseCase,
 ) {
     fun configure(application: Application) {
         application.routing {
@@ -94,17 +99,31 @@ class UsersController(
             get("/{userId}/followers") {
                 val userId = call.parameters["userId"]!!.toLong()
 
-                val followed = followedArtistsRepository.getFollowedArtists(userId)
+                val followed = getAllFollowsUseCase.invoke(userId)
 
                 call.respond(followed)
             }
 
             get("/{userId}/recently-played") {
-                val userId = call.parameters["userId"]!!
+                val userId = call.parameters["userId"]!!.toLong()
+
+                val list = getListeningHistoryUseCase.invoke(userId)
+
+                call.respond(list)
             }
 
             post("/{userId}/history") {
-                val userId = call.parameters["userId"]!!
+                val userId = call.parameters["userId"]!!.toLong()
+                val history = call.receive<ListeningHistoryDto>()
+
+                val result = addListeningHistoryUseCase.invoke(history.toListeningHistory(userId))
+
+                if (!result) {
+                    call.respond(HttpStatusCode.InternalServerError, mapOf("error" to "Не удалось добавить историю прослушивания"))
+                    return@post
+                }
+
+                call.respond(HttpStatusCode.OK, mapOf("message" to "История прослушивания успешно добавлена"))
             }
         }
     }
