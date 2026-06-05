@@ -1,5 +1,6 @@
 package dev.stranik.data.dto
 
+import dev.stranik.data.serializers.LocalDateTimeSerializer
 import kotlinx.serialization.Serializable
 import java.time.LocalDateTime
 
@@ -10,6 +11,7 @@ data class ArtistDto(
     val avatarUrl: String,
     val country: String,
     val monthlyListeners: Int,
+    @Serializable(with = LocalDateTimeSerializer::class)
     val createdAt: LocalDateTime,
 )
 

@@ -1,5 +1,6 @@
 package dev.stranik.data.dto
 
+import dev.stranik.data.serializers.LocalDateTimeSerializer
 import kotlinx.serialization.Serializable
 import java.time.LocalDateTime
 
@@ -11,6 +12,7 @@ data class TrackDto(
     val album: AlbumArtistDto?,
     val durationSec: Int,
     val playCount: Int,
+    @Serializable(with = LocalDateTimeSerializer::class)
     val createdAt: LocalDateTime,
 )
 

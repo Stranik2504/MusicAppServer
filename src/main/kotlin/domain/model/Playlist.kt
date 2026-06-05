@@ -1,5 +1,6 @@
 package dev.stranik.domain.model
 
+import dev.stranik.data.serializers.LocalDateTimeSerializer
 import kotlinx.serialization.Serializable
 import java.time.LocalDateTime
 
@@ -12,7 +13,9 @@ data class Playlist(
     val tracks: List<PlaylistTrack>,
     val isPublic: Boolean,
     val coverUrl: String?,
+    @Serializable(with = LocalDateTimeSerializer::class)
     val createdAt: LocalDateTime,
+    @Serializable(with = LocalDateTimeSerializer::class)
     val updatedAt: LocalDateTime,
 )
 

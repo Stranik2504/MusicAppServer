@@ -1,5 +1,6 @@
 package dev.stranik.domain.model
 
+import dev.stranik.data.serializers.LocalDateTimeSerializer
 import kotlinx.serialization.Serializable
 import java.time.LocalDateTime
 
@@ -9,5 +10,6 @@ data class History(
     val userId: Long,
     val trackId: Long,
     val playedSec: Int,
+    @Serializable(with = LocalDateTimeSerializer::class)
     val playedAt: LocalDateTime
 )

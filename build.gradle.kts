@@ -2,6 +2,7 @@ plugins {
     alias(libs.plugins.kotlin.jvm)
     alias(ktorLibs.plugins.ktor)
     application
+    kotlin("plugin.serialization") version "2.2.10"
 }
 
 group = "dev.stranik"

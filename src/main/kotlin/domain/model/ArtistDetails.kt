@@ -1,5 +1,6 @@
 package dev.stranik.domain.model
 
+import dev.stranik.data.serializers.LocalDateTimeSerializer
 import kotlinx.serialization.Serializable
 import java.time.LocalDateTime
 
@@ -15,6 +16,7 @@ data class ArtistDetails(
     val topTracks: List<ArtistTrack>,
     val albums: List<ArtistAlbum>,
     val followersCount: Int,
+    @Serializable(with = LocalDateTimeSerializer::class)
     val createdAt: LocalDateTime,
 )
 

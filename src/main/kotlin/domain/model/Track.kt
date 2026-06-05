@@ -1,5 +1,6 @@
 package dev.stranik.domain.model
 
+import dev.stranik.data.serializers.LocalDateTimeSerializer
 import kotlinx.serialization.Serializable
 import java.time.LocalDateTime
 
@@ -12,6 +13,7 @@ data class Track(
     val durationSec: Int,
     val playCount: Int,
     val fileUrl: String,
+    @Serializable(with = LocalDateTimeSerializer::class)
     val createdAt: LocalDateTime,
 )
 
