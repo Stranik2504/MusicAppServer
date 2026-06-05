@@ -1,5 +1,6 @@
 package dev.stranik.Routing
 
+import at.favre.lib.crypto.bcrypt.BCrypt
 import dev.stranik.di.AppContainer
 import io.ktor.server.application.*
 import io.ktor.server.auth.authenticate
@@ -9,7 +10,11 @@ import io.ktor.server.routing.*
 fun Application.configureRouting() {
     routing {
         get("/ping") {
-            call.respondText("Pong!")
+            // BCrypt.withDefaults().hashToString(12, password.toCharArray())
+            val password = "12345"
+            val hash = "\$2a\$12\$ryg0VwPbN7qqKx1tMZHfveoL7Ie//M1wnKVkT/PCPDrSrvJrWhuzC"
+            val res = BCrypt.verifyer().verify(password.toCharArray(), hash).verified
+            call.respondText("Pong!" + res)
         }
 
         route("/api") {

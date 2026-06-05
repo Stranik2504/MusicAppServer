@@ -9,9 +9,9 @@ class RegisterUseCase(
     private val passwordHasher: PasswordHasher
 ) {
     suspend fun register(user: User): Boolean {
-        val saveUser = user.copy(
-            passwordHash = passwordHasher.hash(user.passwordHash)
-        )
+        val hashed = passwordHasher.hash(user.passwordHash)
+
+        val saveUser = user.copy(passwordHash = hashed)
 
         userRepository.findByEmail(saveUser.email)?.let {
             return false
