@@ -11,7 +11,11 @@ class LoginUseCase(
     suspend fun login(username: String, password: String): String? {
         val user = userRepository.findByEmail(username) ?: return null
 
+        println(user)
+
         if (!passwordHasher.verify(password, user.passwordHash)) return null
+
+        println("get token")
 
         return JwtConfig.generateToken(user.id, user.username, user.email)
     }
