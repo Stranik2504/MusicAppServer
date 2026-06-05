@@ -10,11 +10,7 @@ import io.ktor.server.routing.*
 fun Application.configureRouting() {
     routing {
         get("/ping") {
-            // BCrypt.withDefaults().hashToString(12, password.toCharArray())
-            val password = "12345"
-            val hash = "\$2a\$12\$ryg0VwPbN7qqKx1tMZHfveoL7Ie//M1wnKVkT/PCPDrSrvJrWhuzC"
-            val res = BCrypt.verifyer().verify(password.toCharArray(), hash).verified
-            call.respondText("Pong!" + res)
+            call.respondText("Pong!")
         }
 
         route("/api") {
