@@ -22,5 +22,7 @@ interface PlaylistRepository {
     suspend fun addTrack(playlistId: Long, trackId: Long, position: Int?): Boolean
 
     suspend fun removeTrack(playlistId: Long, trackId: Long): Boolean
+
+    suspend fun getAllPlaylistUser(userId: Long): List<Long>
 }
 

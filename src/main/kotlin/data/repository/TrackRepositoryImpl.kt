@@ -1,5 +1,6 @@
 package dev.stranik.data.repository
 
+import dev.stranik.data.databases.AlbumsTable
 import dev.stranik.data.databases.ArtistsTable
 import dev.stranik.data.databases.LikedTracksTable
 import dev.stranik.data.databases.TracksTable
@@ -68,6 +69,7 @@ class TrackRepositoryImpl : TrackRepository {
     override suspend fun findById(id: Long): Track? = transaction {
         val row = TracksTable
             .join(ArtistsTable, JoinType.LEFT, TracksTable.artistId, ArtistsTable.id)
+            .join(AlbumsTable, JoinType.LEFT, TracksTable.albumId, AlbumsTable.id)
             .selectAll()
             .where { TracksTable.id eq id }
             .singleOrNull() ?: return@transaction null
@@ -106,7 +108,15 @@ class TrackRepositoryImpl : TrackRepository {
             name = this[ArtistsTable.name],
         )
 
-        val album: AlbumArtist? = null
+        var album: AlbumArtist? = null
+
+        if (this[TracksTable.albumId] != null) {
+            album = AlbumArtist(
+                id = this[AlbumsTable.id].value,
+                name = this[AlbumsTable.title],
+            )
+        }
+
         return Track(
             id = this[TracksTable.id].value,
             title = this[TracksTable.title],

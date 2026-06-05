@@ -101,6 +101,13 @@ class PlaylistRepositoryImpl : PlaylistRepository {
         deleted > 0
     }
 
+    override suspend fun getAllPlaylistUser(userId: Long): List<Long> = transaction {
+        PlaylistsTable
+            .selectAll()
+            .andWhere { PlaylistsTable.userId eq userId }
+            .map { it[PlaylistsTable.id].value }
+    }
+
     private fun findByIdInternal(id: Long): Playlist? {
         val row = PlaylistsTable
             .join(UserTable, JoinType.INNER, PlaylistsTable.userId, UserTable.id)

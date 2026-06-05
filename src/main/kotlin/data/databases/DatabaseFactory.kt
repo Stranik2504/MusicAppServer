@@ -8,9 +8,10 @@ import org.jetbrains.exposed.sql.transactions.transaction
 
 object DatabaseFactory {
     fun init() {
-        val jdbcUrl = env("DB_JDBC_URL", "jdbc:postgresql://localhost:5432/musicapp")
+        // val jdbcUrl = env("DB_JDBC_URL", "jdbc:postgresql://localhost:5432/musicapp")
+        val jdbcUrl = env("DB_JDBC_URL", "jdbc:postgresql://musicapp.stranik.dev:5434/musicapp")
         val username = env("DB_USERNAME", "musicapp")
-        val password = env("DB_PASSWORD", "musicapp")
+        val password = env("DB_PASSWORD", "very_secure_password_123123d")
         val driverClassName = env("DB_DRIVER", "org.postgresql.Driver")
 
         val config = HikariConfig().apply {

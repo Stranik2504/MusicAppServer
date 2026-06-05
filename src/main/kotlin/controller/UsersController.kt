@@ -7,7 +7,9 @@ import dev.stranik.domain.mapper.toUser
 import dev.stranik.domain.usecases.AddListeningHistoryUseCase
 import dev.stranik.domain.usecases.GetAllFollowsUseCase
 import dev.stranik.domain.usecases.GetAvatarUseCase
+import dev.stranik.domain.usecases.GetLikedTracksUseCase
 import dev.stranik.domain.usecases.GetListeningHistoryUseCase
+import dev.stranik.domain.usecases.GetMyPlaylistsUseCase
 import dev.stranik.domain.usecases.GetUserInfoUseCase
 import dev.stranik.domain.usecases.UpdateUserUseCase
 import io.ktor.http.HttpStatusCode
@@ -28,6 +30,8 @@ class UsersController(
     private val getAllFollowsUseCase: GetAllFollowsUseCase,
     private val getListeningHistoryUseCase: GetListeningHistoryUseCase,
     private val addListeningHistoryUseCase: AddListeningHistoryUseCase,
+    private val getLikedTracksUseCase: GetLikedTracksUseCase,
+    private val getMyPlaylistsUseCase: GetMyPlaylistsUseCase,
 ) {
     fun configure(route: Route) {
         route.apply {
@@ -123,6 +127,32 @@ class UsersController(
                 }
 
                 call.respond(HttpStatusCode.OK, mapOf("message" to "История прослушивания успешно добавлена"))
+            }
+
+            get("/liked") {
+                val jwtUserId = call.principal<JWTPrincipal>()?.payload?.getClaim("userId")?.asLong()
+
+                if (jwtUserId == null) {
+                    call.respond(HttpStatusCode.Unauthorized, mapOf("error" to "Пользователь не авторизован"))
+                    return@get
+                }
+
+                val list = getLikedTracksUseCase(jwtUserId)
+
+                call.respond(list)
+            }
+
+            get("/playlists") {
+                val jwtUserId = call.principal<JWTPrincipal>()?.payload?.getClaim("userId")?.asLong()
+
+                if (jwtUserId == null) {
+                    call.respond(HttpStatusCode.Unauthorized, mapOf("error" to "Пользователь не авторизован"))
+                    return@get
+                }
+
+                val list = getMyPlaylistsUseCase(jwtUserId)
+
+                call.respond(list)
             }
         }
     }

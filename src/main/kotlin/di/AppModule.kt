@@ -13,6 +13,7 @@ import dev.stranik.data.repository.ArtistRepositoryImpl
 import dev.stranik.data.repository.FollowedArtistsRepositoryImpl
 import dev.stranik.data.repository.AlbumRepositoryImpl
 import dev.stranik.data.repository.GenresRepositoryImpl
+import dev.stranik.data.repository.LikedTracksRepositoryImpl
 import dev.stranik.data.repository.TrackRepositoryImpl
 import dev.stranik.data.repository.ListeningHistoryRepositoryImpl
 import dev.stranik.data.repository.RecommendationRepositoryImpl
@@ -22,6 +23,7 @@ import dev.stranik.domain.repository.ArtistRepository
 import dev.stranik.domain.repository.AlbumRepository
 import dev.stranik.domain.repository.FollowedArtistsRepository
 import dev.stranik.domain.repository.GenresRepository
+import dev.stranik.domain.repository.LikedTracksRepository
 import dev.stranik.domain.repository.ListeningHistoryRepository
 import dev.stranik.domain.repository.PlaylistRepository
 import dev.stranik.domain.repository.RecommendationRepository
@@ -45,7 +47,9 @@ import dev.stranik.domain.usecases.GetTrackLikesCountUseCase
 import dev.stranik.domain.usecases.GetAllFollowsUseCase
 import dev.stranik.domain.usecases.GetAllGenresUseCase
 import dev.stranik.domain.usecases.GetAvatarUseCase
+import dev.stranik.domain.usecases.GetLikedTracksUseCase
 import dev.stranik.domain.usecases.GetListeningHistoryUseCase
+import dev.stranik.domain.usecases.GetMyPlaylistsUseCase
 import dev.stranik.domain.usecases.GetPlaylistUseCase
 import dev.stranik.domain.usecases.GetUserInfoUseCase
 import dev.stranik.domain.usecases.LoginUseCase
@@ -73,12 +77,15 @@ object AppContainer {
         RecommendationRepositoryImpl(albumRepository, trackRepository, listeningHistoryRepository)
     }
     val genresRepository: GenresRepository by lazy { GenresRepositoryImpl() }
+    val likedTracksRepository: LikedTracksRepository by lazy { LikedTracksRepositoryImpl() }
 
     val loginUseCase: LoginUseCase by lazy { LoginUseCase(userRepository, PasswordHasher) }
     val registerUseCase: RegisterUseCase by lazy { RegisterUseCase(userRepository, PasswordHasher) }
     val getUserInfoUseCase: GetUserInfoUseCase by lazy { GetUserInfoUseCase(userRepository) }
     val updateUserUseCase: UpdateUserUseCase by lazy { UpdateUserUseCase(userRepository) }
     val getAvatarUseCase: GetAvatarUseCase by lazy { GetAvatarUseCase(userRepository) }
+    val getLikedTracksUseCase: GetLikedTracksUseCase by lazy { GetLikedTracksUseCase(likedTracksRepository) }
+    val getMyPlaylistsUseCase: GetMyPlaylistsUseCase by lazy { GetMyPlaylistsUseCase(playlistRepository) }
     val searchAlbumsUseCase: SearchAlbumsUseCase by lazy { SearchAlbumsUseCase(albumRepository) }
     val getAlbumUseCase: GetAlbumUseCase by lazy { GetAlbumUseCase(albumRepository) }
     val searchTracksUseCase: SearchTracksUseCase by lazy { SearchTracksUseCase(trackRepository) }
@@ -114,7 +121,9 @@ object AppContainer {
             getAvatarUseCase,
             getAllFollowsUseCase,
             getListeningHistoryUseCase,
-            addListeningHistoryUseCase
+            addListeningHistoryUseCase,
+            getLikedTracksUseCase,
+            getMyPlaylistsUseCase
         )
     }
     val albumsController: AlbumsController by lazy { AlbumsController(searchAlbumsUseCase, getAlbumUseCase) }

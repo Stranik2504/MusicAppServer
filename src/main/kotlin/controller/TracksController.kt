@@ -61,31 +61,6 @@ class TracksController(
                 call.respond(tracks)
             }
 
-            get("/{trackId}") {
-                val trackIdParam = call.parameters["trackId"]
-
-                if (trackIdParam == null) {
-                    call.respond(HttpStatusCode.BadRequest, mapOf("error" to "trackId не задан"))
-                    return@get
-                }
-
-                val trackId = trackIdParam.toLongOrNull()
-
-                if (trackId == null) {
-                    call.respond(HttpStatusCode.BadRequest, mapOf("error" to "Неверный trackId"))
-                    return@get
-                }
-
-                val track = getTrackUseCase(trackId)
-
-                if (track == null) {
-                    call.respond(HttpStatusCode.NotFound, mapOf("error" to "Трек не найден"))
-                    return@get
-                }
-
-                call.respond(track)
-            }
-
             get("/{trackId}/stream") {
                 val trackIdParam = call.parameters["trackId"]
 
@@ -124,7 +99,6 @@ class TracksController(
             }
 
             get("/{trackId}/hls") {
-                // Пока не реализовано — возвращаем 501
                 val trackIdParam = call.parameters["trackId"]
 
                 if (trackIdParam == null) {
@@ -301,6 +275,31 @@ class TracksController(
                 val count = getTrackLikesCountUseCase.invoke(trackId)
 
                 call.respond(mapOf("likes" to count))
+            }
+
+            get("/{trackId}") {
+                val trackIdParam = call.parameters["trackId"]
+
+                if (trackIdParam == null) {
+                    call.respond(HttpStatusCode.BadRequest, mapOf("error" to "trackId не задан"))
+                    return@get
+                }
+
+                val trackId = trackIdParam.toLongOrNull()
+
+                if (trackId == null) {
+                    call.respond(HttpStatusCode.BadRequest, mapOf("error" to "Неверный trackId"))
+                    return@get
+                }
+
+                val track = getTrackUseCase(trackId)
+
+                if (track == null) {
+                    call.respond(HttpStatusCode.NotFound, mapOf("error" to "Трек не найден"))
+                    return@get
+                }
+
+                call.respond(track)
             }
         }
     }

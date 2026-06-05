@@ -69,7 +69,7 @@ class PlaylistsController(
                 call.respond(playlist)
             }
 
-            post("/") {
+            post("/create") {
                 val jwtUserId = call.principal<JWTPrincipal>()?.payload?.getClaim("userId")?.asLong()
 
                 if (jwtUserId == null) {

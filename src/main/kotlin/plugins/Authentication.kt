@@ -23,7 +23,7 @@ fun Application.configureAuthentication() {
                 val exp = credential.payload.expiresAt?.time ?: 0
                 val now = System.currentTimeMillis()
 
-                if (exp >= now)
+                if (exp < now)
                     return@validate null
 
                 if (username == null || username.isBlank())
