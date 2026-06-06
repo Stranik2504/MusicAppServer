@@ -113,50 +113,44 @@ class TracksController(
                     return@get
                 }
 
-                try {
-                    val url = getTrackStreamUseCase(trackId)
+                val url = getTrackStreamUseCase(trackId)
 
-                    if (url == null) {
-                        call.respond(HttpStatusCode.NotFound, mapOf("error" to "Файл стрима не найден"))
-                        return@get
-                    }
-
-                    if (isRemoteUrl(url)) {
-                        if (url.endsWith(".m3u8", ignoreCase = true)) {
-                            call.respondRedirect(url)
-                            return@get
-                        }
-
-                        call.respond(
-                            HttpStatusCode.BadGateway,
-                            mapOf("error" to "Для удалённого источника доступен только готовый HLS manifest"),
-                        )
-                        return@get
-                    }
-
-                    val filePath = resolveLocalPath(url)
-
-                    if (filePath == null || !Files.exists(filePath) || !Files.isRegularFile(filePath)) {
-                        call.respond(HttpStatusCode.NotFound, mapOf("error" to "Локальный файл не найден"))
-                        return@get
-                    }
-
-                    val hlsPackage = prepareHlsPackage(trackId, filePath)
-
-                    if (hlsPackage == null) {
-                        call.respond(HttpStatusCode.InternalServerError, mapOf("error" to "Не удалось подготовить HLS"))
-                        return@get
-                    }
-
-                    val manifestText = buildManifestText(trackId, hlsPackage.manifestFile)
-
-                    call.response.headers.append("Cache-Control", "no-store")
-                    call.respondText(manifestText, ContentType.parse("application/vnd.apple.mpegurl"), HttpStatusCode.OK)
+                if (url == null) {
+                    call.respond(HttpStatusCode.NotFound, mapOf("error" to "Файл стрима не найден"))
+                    return@get
                 }
-                catch (e: Exception) {
-                    e.printStackTrace()
-                    call.respond(HttpStatusCode.InternalServerError, mapOf("error" to (e.message ?: "Ошибка")))
+
+                if (isRemoteUrl(url)) {
+                    if (url.endsWith(".m3u8", ignoreCase = true)) {
+                        call.respondRedirect(url)
+                        return@get
+                    }
+
+                    call.respond(
+                        HttpStatusCode.BadGateway,
+                        mapOf("error" to "Для удалённого источника доступен только готовый HLS manifest"),
+                    )
+                    return@get
                 }
+
+                val filePath = resolveLocalPath(url)
+
+                if (filePath == null || !Files.exists(filePath) || !Files.isRegularFile(filePath)) {
+                    call.respond(HttpStatusCode.NotFound, mapOf("error" to "Локальный файл не найден"))
+                    return@get
+                }
+
+                val hlsPackage = prepareHlsPackage(trackId, filePath)
+
+                if (hlsPackage == null) {
+                    call.respond(HttpStatusCode.InternalServerError, mapOf("error" to "Не удалось подготовить HLS"))
+                    return@get
+                }
+
+                val manifestText = buildManifestText(trackId, hlsPackage.manifestFile)
+
+                call.response.headers.append("Cache-Control", "no-store")
+                call.respondText(manifestText, ContentType.parse("application/vnd.apple.mpegurl"), HttpStatusCode.OK)
             }
 
             get("/{trackId}/hls/{segmentFile}") {
