@@ -12,6 +12,7 @@ import dev.stranik.domain.model.ArtistDetails
 import dev.stranik.domain.model.ArtistTrack
 
 fun Artist.toDto() = ArtistDto(
+    id = id,
     name = name,
     bio = bio,
     avatarUrl = avatarUrl,

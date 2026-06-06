@@ -1,5 +1,10 @@
 package dev.stranik.controller
 
+import dev.stranik.data.dto.AlbumDto
+import dev.stranik.data.dto.ArtistDto
+import dev.stranik.data.dto.PlaylistDto
+import dev.stranik.data.dto.SearchResultDto
+import dev.stranik.data.dto.TrackDto
 import dev.stranik.domain.usecases.SearchAlbumsUseCase
 import dev.stranik.domain.usecases.SearchArtistsUseCase
 import dev.stranik.domain.usecases.SearchPlaylistsUseCase
@@ -17,14 +22,17 @@ class SearchController(
 ) {
     fun configure(route: Route) {
         route.apply {
-            get("/") {
+            get("") {
                 val q = call.request.queryParameters["q"]
                 val type = call.request.queryParameters["type"] ?: "all"
                 val limit = call.request.queryParameters["limit"]?.toIntOrNull() ?: 20
                 val cursor = call.request.queryParameters["cursor"]
 
                 try {
-                    val result = mutableMapOf<String, Any?>()
+                    var tracks = emptyList<TrackDto>()
+                    var albums = emptyList<AlbumDto>()
+                    var artists = emptyList<ArtistDto>()
+                    var playlists = emptyList<PlaylistDto>()
 
                     if (type == "all" || type == "track") {
                         val artistId = call.request.queryParameters["artistId"]?.toLongOrNull()
@@ -32,7 +40,7 @@ class SearchController(
                         val durationMin = call.request.queryParameters["durationMin"]?.toIntOrNull()
                         val durationMax = call.request.queryParameters["durationMax"]?.toIntOrNull()
 
-                        val tracks = searchTracksUseCase(
+                        val tracksSearch = searchTracksUseCase(
                             q = q,
                             artistId = artistId,
                             albumId = albumId,
@@ -43,18 +51,18 @@ class SearchController(
                         )
 
                         if (type == "track") {
-                            call.respond(tracks)
+                            call.respond(tracksSearch)
                             return@get
                         }
 
-                        result["tracks"] = tracks
+                        tracks = tracksSearch
                     }
 
                     if (type == "all" || type == "album") {
                         val artistId = call.request.queryParameters["artistId"]?.toLongOrNull()
                         val year = call.request.queryParameters["year"]?.toIntOrNull()
 
-                        val albums = searchAlbumsUseCase(
+                        val albumsSearch = searchAlbumsUseCase(
                             artistId = artistId,
                             q = q,
                             year = year,
@@ -63,18 +71,18 @@ class SearchController(
                         )
 
                         if (type == "album") {
-                            call.respond(albums)
+                            call.respond(albumsSearch)
                             return@get
                         }
 
-                        result["albums"] = albums
+                        albums = albumsSearch
                     }
 
                     if (type == "all" || type == "artist") {
                         val genre = call.request.queryParameters["genre"]
                         val sort = call.request.queryParameters["sort"]
 
-                        val artists = searchArtistsUseCase(
+                        val artistsSearch = searchArtistsUseCase(
                             q = q,
                             genre = genre,
                             sort = sort,
@@ -83,18 +91,18 @@ class SearchController(
                         )
 
                         if (type == "artist") {
-                            call.respond(artists)
+                            call.respond(artistsSearch)
                             return@get
                         }
 
-                        result["artists"] = artists
+                        artists = artistsSearch
                     }
 
                     if (type == "all" || type == "playlist") {
                         val userId = call.request.queryParameters["userId"]?.toLongOrNull()
                         val publicOnly = call.request.queryParameters["publicOnly"]?.toBoolean()
 
-                        val playlists = searchPlaylistsUseCase(
+                        val playlistsSearch = searchPlaylistsUseCase(
                             userId = userId,
                             q = q,
                             publicOnly = publicOnly,
@@ -103,14 +111,21 @@ class SearchController(
                         )
 
                         if (type == "playlist") {
-                            call.respond(playlists)
+                            call.respond(playlistsSearch)
                             return@get
                         }
 
-                        result["playlists"] = playlists
+                        playlists = playlistsSearch
                     }
 
-                    call.respond(result)
+                    call.respond(
+                        SearchResultDto(
+                            tracks = tracks,
+                            albums = albums,
+                            artists = artists,
+                            playlists = playlists,
+                        )
+                    )
                 } catch (e: Exception) {
                     call.respond(HttpStatusCode.InternalServerError, mapOf("error" to (e.message ?: "Ошибка")))
                 }

@@ -30,6 +30,7 @@ class TrackRepositoryImpl : TrackRepository {
     ): List<Track> = transaction {
         val query = TracksTable
             .join(ArtistsTable, JoinType.LEFT, TracksTable.artistId, ArtistsTable.id)
+            .join(AlbumsTable, JoinType.LEFT, TracksTable.albumId, AlbumsTable.id)
             .selectAll()
             .apply {
                 if (!q.isNullOrBlank()) {

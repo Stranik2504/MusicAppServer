@@ -107,10 +107,36 @@ class UsersController(
                 call.respond(followed)
             }
 
+            get("/followers") {
+                val jwtUserId = call.principal<JWTPrincipal>()?.payload?.getClaim("userId")?.asLong()
+
+                if (jwtUserId == null) {
+                    call.respond(HttpStatusCode.Unauthorized, mapOf("error" to "Пользователь не авторизован"))
+                    return@get
+                }
+
+                val followed = getAllFollowsUseCase.invoke(jwtUserId)
+
+                call.respond(followed)
+            }
+
             get("/{userId}/recently-played") {
                 val userId = call.parameters["userId"]!!.toLong()
 
                 val list = getListeningHistoryUseCase.invoke(userId)
+
+                call.respond(list)
+            }
+
+            get("/recently-played") {
+                val jwtUserId = call.principal<JWTPrincipal>()?.payload?.getClaim("userId")?.asLong()
+
+                if (jwtUserId == null) {
+                    call.respond(HttpStatusCode.Unauthorized, mapOf("error" to "Пользователь не авторизован"))
+                    return@get
+                }
+
+                val list = getListeningHistoryUseCase.invoke(jwtUserId)
 
                 call.respond(list)
             }

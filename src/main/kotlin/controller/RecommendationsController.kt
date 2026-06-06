@@ -26,9 +26,16 @@ class RecommendationsController(
                 }
 
                 val limit = call.request.queryParameters["limit"]?.toIntOrNull() ?: 10
-                val recommendations = getHomeRecommendationsUseCase(jwtUserId, limit)
 
-                call.respond(recommendations)
+                try {
+                    val recommendations = getHomeRecommendationsUseCase(jwtUserId, limit)
+                    call.respond(recommendations)
+                }
+                catch (e: Exception) {
+                    e.printStackTrace()
+                    val a = 1
+                }
+
             }
 
             get("/for-track/{trackId}") {
