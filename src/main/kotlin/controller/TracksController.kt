@@ -309,9 +309,7 @@ class TracksController(
     }
 
     private fun resolveLocalPath(url: String): Path? {
-        return Path.of("C:\\storage\\music\\track1.mp3");
-
-        /*return try {
+        return try {
             val rawPath = when {
                 url.startsWith("file:", ignoreCase = true) -> Paths.get(URI.create(url))
                 else -> Paths.get(url)
@@ -326,7 +324,7 @@ class TracksController(
             }
         } catch (_: Exception) {
             null
-        }*/
+        }
     }
 
     private data class HlsPackage(
